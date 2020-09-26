@@ -41,18 +41,27 @@ class App extends Component {
     switch (status) {
       case "completed":
         this.setState({
-          status: toDos.filter((todo) => todo.completed === true),
+          filteredTodos: toDos.filter((todo) => todo.completed === true),
         });
         break;
       case "uncompleted":
         this.setState({
-          status: toDos.filter((todo) => todo.completed === false),
+          filteredTodos: toDos.filter((todo) => todo.completed === false),
         });
         break;
       default:
-        this.setState({ status: toDos });
+        this.setState({ filteredTodos: toDos });
     }
   };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      prevState.toDos !== this.state.toDos ||
+      prevState.status !== this.state.status
+    ) {
+      this.filterHandler();
+    }
+  }
 
   render() {
     const { inputText, toDos } = this.state;
