@@ -54,7 +54,16 @@ class App extends Component {
     }
   };
 
+  componentDidMount() {
+    if (localStorage.getItem("todos")) {
+      this.setState({ toDos: JSON.parse(localStorage.getItem("todos")) });
+    }
+  }
+
   componentDidUpdate(prevProps, prevState) {
+    if (prevState.toDos !== this.state.toDos) {
+      this.saveLocalTodos();
+    }
     if (
       prevState.toDos !== this.state.toDos ||
       prevState.status !== this.state.status
@@ -63,8 +72,13 @@ class App extends Component {
     }
   }
 
+  saveLocalTodos = () => {
+    const { toDos } = this.state;
+    localStorage.setItem("todos", JSON.stringify(toDos));
+  };
+
   render() {
-    const { inputText, toDos } = this.state;
+    const { inputText, toDos, filteredTodos } = this.state;
     return (
       <div className="App">
         <header>
@@ -76,7 +90,11 @@ class App extends Component {
           submitTodoHandler={this.submitTodoHandler}
           handleStatus={this.handleStatus}
         />
-        <TodoList toDos={toDos} handleUpdate={this.handleUpdate} />
+        <TodoList
+          toDos={toDos}
+          filteredTodos={filteredTodos}
+          handleUpdate={this.handleUpdate}
+        />
       </div>
     );
   }
